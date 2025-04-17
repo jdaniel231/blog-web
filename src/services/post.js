@@ -50,3 +50,13 @@ export const deletePost = async (id) => {
     return false;
   }
 };
+
+export const getMyBlogPosts = async () => {
+  try {
+    const { data } = await api.get('/api/v1/posts/my_blog_posts');
+    return data;
+  } catch (error) {
+    console.error('Erro ao obter posts:', error);
+    return [];
+  }
+};

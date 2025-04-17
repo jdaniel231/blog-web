@@ -21,6 +21,13 @@ export default function Header() {
         <Box>
           {isAuthenticated ? (
             <>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/my-post"
+              >
+                Minha Postagem
+              </Button>
               <Button 
                 color="inherit" 
                 component={Link} 
