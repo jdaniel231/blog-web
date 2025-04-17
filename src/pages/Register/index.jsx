@@ -13,7 +13,7 @@ export default function Register() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Previne o comportamento padrão do formulário
     setError('');
 
     // Validação de senha
@@ -64,7 +64,7 @@ export default function Register() {
             autoComplete="email"
             autoFocus
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)} // Atualiza o estado de email
           />
           <TextField
             margin="normal"
@@ -75,7 +75,7 @@ export default function Register() {
             type="password"
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)} // Atualiza o estado de password
           />
           <TextField
             margin="normal"
@@ -86,7 +86,7 @@ export default function Register() {
             type="password"
             id="passwordConfirmation"
             value={passwordConfirmation}
-            onChange={(e) => setPasswordConfirmation(e.target.value)}
+            onChange={(e) => setPasswordConfirmation(e.target.value)} // Atualiza o estado de passwordConfirmation
           />
           <Button
             type="submit"

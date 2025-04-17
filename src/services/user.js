@@ -1,35 +1,17 @@
 import api from './api';
 
-// Função utilitária para salvar o token e o email no localStorage
-const saveAuthData = (token, email) => {
-  localStorage.setItem('token', token);
-  localStorage.setItem('userEmail', email);
-};
-
-// Função utilitária para lidar com erros
-const handleError = (error, defaultMessage) => {
-  console.error('Erro:', error);
-  return {
-    success: false,
-    message: error.response?.data?.message || defaultMessage,
-  };
-};
-
 export const login = async (email, password) => {
   try {
     const response = await api.post('/users/sign_in', {
       user: { email, password },
     });
 
-    const token = response.data?.authorization;
-    if (token) {
-      saveAuthData(token, email);
-      return { success: true };
-    }
-
-    return { success: false, message: 'Token não encontrado' };
+    // Captura o token do corpo da resposta
+    const token = response.data.authorization;
+    return { token, data: response.data }; // Retorna o token e os dados do usuário
   } catch (error) {
-    return handleError(error, 'Erro ao fazer login');
+    console.error('Erro ao fazer login:', error);
+    throw error;
   }
 };
 
@@ -39,27 +21,19 @@ export const register = async (email, password, passwordConfirmation) => {
       user: { email, password, password_confirmation: passwordConfirmation },
     });
 
-    const token = response.data?.authorization;
-    if (token) {
-      saveAuthData(token, email);
-      return { success: true };
-    }
-
-    return { success: false, message: 'Token não encontrado' };
+    return response.data; // Retorna os dados da resposta
   } catch (error) {
-    return handleError(error, 'Erro ao registrar');
+    console.error('Erro ao registrar:', error);
+    throw error; // Lança o erro para ser tratado no hook
   }
 };
 
-export const logoutUser = async () => {
+
+export const logout = async () => {
   try {
-    await api.delete('/users/sign_out');
+    await api.delete('/users/sign_out'); // Envia a requisição de logout para o backend
   } catch (error) {
     console.error('Erro ao fazer logout:', error);
-  } finally {
-    // Remove os dados do localStorage mesmo que a requisição falhe
-    localStorage.removeItem('token');
-    localStorage.removeItem('userEmail');
-    return true;
+    throw error; // Lança o erro para ser tratado no hook
   }
 };

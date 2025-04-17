@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
-import { login, register } from "../services/user"; // Importação corrigida
+import { login, register, logout } from "../services/user"; // Importação corrigida
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -13,30 +13,29 @@ export const useAuth = () => {
 
   const loginUser = async (email, password) => {
     try {
-      const response = await login(email, password); // Usando a função importada diretamente
-
-      const token = response?.token;
+      const { token } = await login(email, password); // Captura o token retornado pela função login
+  
       if (token) {
-        localStorage.setItem("token", token);
-        localStorage.setItem("userEmail", email);
-        dispatch({ type: "LOGIN", payload: { email } });
+        localStorage.setItem("token", token); // Salva o token no localStorage
+        localStorage.setItem("userEmail", email); // Salva o email no localStorage
+        dispatch({ type: "LOGIN", payload: { email } }); // Atualiza o estado de autenticação
         return { success: true };
       } else {
         dispatch({ type: "LOGIN_FAILED", payload: { message: "Token não encontrado" } });
         return { success: false, message: "Token não encontrado" };
       }
     } catch (error) {
-      console.error("Erro ao logar:", error);
-      dispatch({ type: "LOGIN_FAILED", payload: { message: error.message } });
-      return { success: false, message: error.message };
+      console.error("Erro ao logar:", error.response?.data || error.message);
+      dispatch({ type: "LOGIN_FAILED", payload: { message: error.response?.data?.message || error.message } });
+      return { success: false, message: error.response?.data?.message || error.message };
     }
   };
 
-  const registerUser = async (email, password) => {
+  const registerUser = async (email, password, passwordConfirmation) => {
     try {
-      const response = await register(email, password); // Usando a função importada diretamente
-
-      const token = response?.token;
+      const response = await register(email, password, passwordConfirmation);
+  
+      const token = response?.authorization; // Ajuste conforme o campo retornado pela API
       if (token) {
         localStorage.setItem("token", token);
         localStorage.setItem("userEmail", email);
@@ -47,17 +46,22 @@ export const useAuth = () => {
         return { success: false, message: "Token não encontrado" };
       }
     } catch (error) {
-      console.error("Erro ao registrar:", error);
-      dispatch({ type: "REGISTER_FAILED", payload: { message: error.message } });
-      return { success: false, message: error.message };
+      console.error("Erro ao registrar:", error.response?.data || error.message);
+      dispatch({ type: "REGISTER_FAILED", payload: { message: error.response?.data?.message || error.message } });
+      return { success: false, message: error.response?.data?.message || error.message };
     }
   };
 
-  const logoutUser = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userEmail");
-    dispatch({ type: "LOGOUT" });
-  };
+  const logoutUser = async () => {
+    try {
+      await logout(); // Chama a função de logout do serviço
+      localStorage.removeItem("token"); // Remove o token do localStorage
+      localStorage.removeItem("userEmail"); // Remove o email do localStorage
+      dispatch({ type: "LOGOUT" }); // Atualiza o estado de autenticação
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    }
+  }
 
   return {
     ...context,
