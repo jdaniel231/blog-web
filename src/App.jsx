@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import PostDetails from './pages/PostDetails';
 import CreatePost from './pages/CreatePost';
+import MyPost from './pages/MyPost';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -31,6 +32,15 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/posts/:id" element={<PostDetails />} />
+        
+        <Route 
+          path="/my-post" 
+          element={
+            <ProtectedRoute>
+              <MyPost />
+            </ProtectedRoute>
+          } 
+        />
         <Route 
           path="/create-post" 
           element={
