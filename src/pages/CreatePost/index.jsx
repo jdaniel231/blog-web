@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Typography, Box, TextField, Button, Alert } from '@mui/material';
-import api from '../../services/api';
+import { createPost } from '../../services/post';
 
 export default function CreatePost() {
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [description, setDescription] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -16,12 +16,10 @@ export default function CreatePost() {
     setLoading(true);
     
     try {
-      const response = await api.post('/posts', {
-        post: { title, content }
-      });
+      await createPost({ title, description });
       
       setLoading(false);
-      navigate(`/posts/${response.data.id}`);
+      navigate('/');
     } catch (err) {
       setError('Erro ao criar postagem');
       setLoading(false);
@@ -53,8 +51,8 @@ export default function CreatePost() {
           required
           multiline
           rows={10}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
         
         <Button

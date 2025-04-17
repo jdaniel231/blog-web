@@ -1,29 +1,29 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Typography, Box, CircularProgress, Divider } from '@mui/material';
-import api from '../../services/api';
+import { getPost } from '../../services/post';
 
 export default function PostDetails() {
-  const { id } = useParams();
+  const { id } = useParams(); // Obtém o ID da postagem da URL
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await api.get(`/posts/${id}`);
-        setPost(response.data);
+        const data = await getPost(id); // Chama a função getPost com o ID da postagem
+        setPost(data); // Atualiza o estado com os dados da postagem
         setLoading(false);
       } catch (err) {
         setError('Erro ao carregar a postagem');
         setLoading(false);
       }
     };
-    
+
     fetchPost();
   }, [id]);
-  
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
@@ -31,7 +31,7 @@ export default function PostDetails() {
       </Box>
     );
   }
-  
+
   if (error) {
     return (
       <Container>
@@ -41,7 +41,7 @@ export default function PostDetails() {
       </Container>
     );
   }
-  
+
   if (!post) {
     return (
       <Container>
@@ -51,21 +51,21 @@ export default function PostDetails() {
       </Container>
     );
   }
-  
+
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Typography variant="h3" component="h1" gutterBottom>
         {post.title}
       </Typography>
-      
+
       <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-        Publicado em {new Date(post.created_at).toLocaleString()}
+        Publicado em {new Date(post.created_at).toLocaleString()} por:  {post.user ? `${post.user.email}` : 'Usuário desconhecido'}
       </Typography>
-      
+
       <Divider sx={{ my: 3 }} />
-      
+
       <Typography variant="body1" paragraph>
-        {post.content}
+        {post.description}
       </Typography>
     </Container>
   );
