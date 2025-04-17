@@ -11,6 +11,7 @@ export const getPosts = async () => {
 };
 
 export const getPost = async (id) => {
+  console.log('ID do post:', id); // Adicionei este log para verificar o ID
   try {
     const { data } = await api.get(`/api/v1/posts/${id}`);
     return data;
@@ -18,7 +19,7 @@ export const getPost = async (id) => {
     console.error('Erro ao obter post:', error);
     return {};
   }
-};
+}
 
 export const createPost = async (data) => {
   try {

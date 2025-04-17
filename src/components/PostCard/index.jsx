@@ -1,5 +1,6 @@
 import { Card, CardContent, CardActions, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+// import {getPost} from '../../services/post';
 
 export default function PostCard({ post }) {
   return (
@@ -9,12 +10,12 @@ export default function PostCard({ post }) {
           {post.title}
         </Typography>
         <Typography>
-          {post.content.substring(0, 100)}
-          {post.content.length > 100 ? '...' : ''}
+          {post.description.substring(0, 100)}
+          {post.description.length > 100 ? '...' : ''}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" component={Link} to={`/posts/${post.id}`}>
+        <Button size="small" component={Link} to={`posts/${post.id}`}>
           Ler mais
         </Button>
       </CardActions>
