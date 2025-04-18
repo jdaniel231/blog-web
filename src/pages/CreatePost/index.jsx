@@ -17,7 +17,6 @@ export default function CreatePost() {
     
     try {
       await createPost({ title, description });
-      
       setLoading(false);
       navigate('/');
     } catch (err) {
