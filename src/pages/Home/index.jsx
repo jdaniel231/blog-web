@@ -43,24 +43,14 @@ export default function Home() {
   }
   
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container maxWidth="md" sx={{ mt: 4 }} >
       <Typography variant="h4" component="h1" gutterBottom>
         Postagens Recentes
       </Typography>
       
-      <Grid container spacing={4}>
-        {posts.length > 0 ? (
-          posts.map((post) => (
-            <Grid item xs={12} sm={6} md={4} key={post.id}>
-              <PostCard post={post} />
-            </Grid>
-          ))
-        ) : (
-          <Grid item xs={12}>
-            <Typography>Nenhuma postagem encontrada.</Typography>
-          </Grid>
-        )}
-      </Grid>
+      {posts.map((post) => (
+        <PostCard key={post.id} post={post} />
+      ))}
     </Container>
   );
 }
