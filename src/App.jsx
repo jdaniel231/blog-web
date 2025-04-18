@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import PostDetails from './pages/PostDetails';
 import CreatePost from './pages/CreatePost';
 import MyPost from './pages/MyPost';
+import EditPost from './pages/EditPost';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -49,6 +50,14 @@ function AppRoutes() {
             </ProtectedRoute>
           } 
         />
+        <Route 
+          path='/edit-post/:id' 
+          element={
+            <ProtectedRoute>
+              <EditPost /> 
+            </ProtectedRoute>
+          } 
+       />
       </Routes>
     </BrowserRouter>
   );

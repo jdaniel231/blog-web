@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { getMyBlogPosts } from "../../services/post";
+import { deletePost, getMyBlogPosts } from "../../services/post";
 import { Container, Typography, Box, CircularProgress, Card, CardContent, CardActions, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function MyPost() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMyPosts = async () => {
@@ -22,6 +24,15 @@ export default function MyPost() {
 
     fetchMyPosts();
   }, []);
+
+  const handleDeletePost = async (id) => {
+    try {
+      await deletePost(id);
+      setPosts(posts.filter((post) => post.id !== id));
+    } catch (err) {
+      console.error("Erro ao excluir post:", err);
+    }
+  };
 
   if (loading) {
     return (
@@ -68,8 +79,14 @@ export default function MyPost() {
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size="small" href={`/posts/${post.id}`}>
+              <Button size="small" onClick={() => navigate(`/posts/${post.id}`)}>
                 Ver detalhes
+              </Button>
+              <Button size="small" onClick={() => navigate(`/edit-post/${post.id}`)}>
+                Editar
+              </Button>
+              <Button size="small" onClick={() => handleDeletePost(post.id)}>
+                Excluir
               </Button>
             </CardActions>
           </Card>
