@@ -15,10 +15,10 @@ export const login = async (email, password) => {
   }
 };
 
-export const register = async (email, password, passwordConfirmation) => {
+export const register = async (email, name, password, passwordConfirmation) => {
   try {
     const response = await api.post('/users', {
-      user: { email, password, password_confirmation: passwordConfirmation },
+      user: { email, name ,password, password_confirmation: passwordConfirmation },
     });
 
     return response.data; // Retorna os dados da resposta

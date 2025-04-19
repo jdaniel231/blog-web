@@ -59,7 +59,7 @@ export default function PostDetails() {
       </Typography>
 
       <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-        Publicado em {new Date(post.created_at).toLocaleString()} por:  {post.user ? `${post.user.email}` : 'Usuário desconhecido'}
+        Publicado em {new Date(post.created_at).toLocaleString()} por:  {post.user ? `${post.user.name}` : 'Usuário desconhecido'}
       </Typography>
 
       <Divider sx={{ my: 3 }} />
