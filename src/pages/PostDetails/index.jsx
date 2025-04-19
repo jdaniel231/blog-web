@@ -16,7 +16,7 @@ export default function PostDetails() {
         setPost(data); // Atualiza o estado com os dados da postagem
         setLoading(false);
       } catch (err) {
-        setError('Erro ao carregar a postagem');
+        setError('Erro ao carregar a postagem', {err});
         setLoading(false);
       }
     };

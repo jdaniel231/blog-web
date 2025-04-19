@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { Container, Box, Typography, TextField, Button, Alert } from "@mui/material";
+import { Container, Box, Typography, TextField, Button, Alert, Dialog, DialogTitle, DialogContent } from "@mui/material";
 import { Link } from "react-router-dom";
+import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
+
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [erroDialog, setErroDialog] = useState(false);
   const { loginUser } = useAuth();
   const navigate = useNavigate();
 
@@ -31,9 +36,16 @@ export default function Login() {
     try {
       const result = await loginUser(email, password);
       if (result.success) {
-        navigate('/');
+        setSuccess(true);
+        setTimeout(() => {
+          navigate('/');
+        }, 3000);
       } else {
         setError(result.message || 'Erro ao fazer login. Tente novamente.');
+        setErroDialog(true);
+        setTimeout(() => {
+          setErroDialog(false);
+        }, 3000);
       }
     } catch (err) {
       console.error('Erro inesperado:', err);
@@ -57,7 +69,6 @@ export default function Login() {
           Login
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
           <TextField
             margin="normal"
             required
@@ -98,6 +109,23 @@ export default function Login() {
           </Box>
         </Box>
       </Box>
+      <Dialog open={success}>
+        <DialogTitle>Sucesso!
+          <CheckCircleOutline sx={{ color: 'green' }} />
+        </DialogTitle>
+        <DialogContent>
+          <Typography>Você foi logado com sucesso!</Typography>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={erroDialog}>
+      <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 4 }}>
+        <ErrorOutline sx={{ fontSize: 50, color: 'red', mb: 2 }} />
+        <Typography variant="h6" gutterBottom>
+          Erro
+        </Typography>
+        <Typography>Senha ou email incorretos!</Typography>
+      </DialogContent>
+      </Dialog>
     </Container>
   );
 }
