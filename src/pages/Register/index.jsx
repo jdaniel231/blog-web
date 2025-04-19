@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ export default function Register() {
     }
 
     setLoading(true);
-    const result = await registerUser(email, password);
+    const result = await registerUser(email, name, password);
     setLoading(false);
 
     if (result.success) {
@@ -65,6 +66,17 @@ export default function Register() {
             autoFocus
             value={email}
             onChange={(e) => setEmail(e.target.value)} // Atualiza o estado de email
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="name"
+            label="Nome"
+            id="name"
+            autoComplete="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)} // Atualiza o estado de name
           />
           <TextField
             margin="normal"

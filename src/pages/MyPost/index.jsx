@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { deletePost, getMyBlogPosts } from "../../services/post";
-import { Container, Typography, Box, CircularProgress, Card, CardContent, CardActions, Button } from "@mui/material";
+import { Container, Typography, Box, CircularProgress, Card, CardContent, CardActions, Button, Alert, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export default function MyPost() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,12 +26,15 @@ export default function MyPost() {
     fetchMyPosts();
   }, []);
 
-  const handleDeletePost = async (id) => {
+  const handleDeletePost = async () => {
+    if (!confirmDelete) return;
     try {
-      await deletePost(id);
-      setPosts(posts.filter((post) => post.id !== id));
+      await deletePost(confirmDelete.id);
+      setPosts(posts.filter((post) => post.id !== confirmDelete.id));
     } catch (err) {
       console.error("Erro ao excluir post:", err);
+    } finally {
+      setConfirmDelete(null);
     }
   };
 
@@ -85,13 +89,35 @@ export default function MyPost() {
               <Button size="small" onClick={() => navigate(`/edit-post/${post.id}`)}>
                 Editar
               </Button>
-              <Button size="small" onClick={() => handleDeletePost(post.id)}>
+              <Button size="small" onClick={() => setConfirmDelete(post)}>
                 Excluir
               </Button>
             </CardActions>
           </Card>
         ))}
       </Box>
+
+      <Dialog
+        open={!!confirmDelete}
+        onClose={() => setConfirmDelete(null)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Excluir Postagem?
+        </DialogTitle>
+        <DialogContent>
+          <Alert severity="warning">
+            Você tem certeza que deseja excluir a postagem?
+          </Alert>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDelete(null)}>Cancelar</Button>
+          <Button onClick={handleDeletePost} autoFocus>
+            Excluir
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }

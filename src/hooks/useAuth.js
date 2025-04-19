@@ -31,9 +31,9 @@ export const useAuth = () => {
     }
   };
 
-  const registerUser = async (email, password, passwordConfirmation) => {
+  const registerUser = async (name, email, password,  passwordConfirmation) => {
     try {
-      const response = await register(email, password, passwordConfirmation);
+      const response = await register(name, email, password, passwordConfirmation);
   
       const token = response?.authorization; // Ajuste conforme o campo retornado pela API
       if (token) {
