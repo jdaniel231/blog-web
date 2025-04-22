@@ -9,6 +9,7 @@ import PostDetails from './pages/PostDetails';
 import CreatePost from './pages/CreatePost';
 import MyPost from './pages/MyPost';
 import EditPost from './pages/EditPost';
+import CreateComment from './pages/CreateComment';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -58,6 +59,14 @@ function AppRoutes() {
             </ProtectedRoute>
           } 
        />
+       <Route
+        path='/posts/:id/comments'
+        element={
+          <ProtectedRoute>
+            <CreateComment />
+          </ProtectedRoute>
+        }
+      />
       </Routes>
     </BrowserRouter>
   );

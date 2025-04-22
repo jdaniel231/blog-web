@@ -21,6 +21,9 @@ export default function PostCard({ post }) {
           <Button size="small" onClick={() => navigate(`/posts/${post.id}`)}>
             Ver detalhes
           </Button>
+          <Button size="small" onClick={() => navigate(`/posts/${post.id}/comments`)}>
+            Comentarios
+          </Button>
         </CardActions>
       </Card>
     </Box>
